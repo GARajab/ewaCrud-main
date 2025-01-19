@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal Example</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!-- Button to trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#editModal"
+    >
+      Edit Scheme
+    </button>
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Scheme</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form
+              id="editForm"
+              action="/schemes/update/678823e265155979a42ebabd?_method=PUT"
+              method="POST"
+            >
+              <div class="mb-3">
+                <label for="Sch_Ref" class="form-label">Scheme Reference</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Sch_Ref"
+                  name="Sch_Ref"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Job_no" class="form-label">Job Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Job_no"
+                  name="Job_no"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="BLK" class="form-label">Block</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="BLK"
+                  name="BLK"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="SUPERVISOR" class="form-label">Supervisor</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="SUPERVISOR"
+                  name="SUPERVISOR"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="ContractorName" class="form-label"
+                  >Contractor Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ContractorName"
+                  name="ContractorName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Title1" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Title1"
+                  name="Title1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="STATUS" class="form-label">Status</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="STATUS"
+                  name="STATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="PERCENTAGE" class="form-label">Percentage</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="PERCENTAGE"
+                  name="PERCENTAGE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATE_OF_COMPLETE" class="form-label"
+                  >Date of Completion</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATE_OF_COMPLETE"
+                  name="DATE_OF_COMPLETE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="APPSTATUS" class="form-label"
+                  >Application Status</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="APPSTATUS"
+                  name="APPSTATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATEOFMEASUREMENT" class="form-label"
+                  >Date of Measurement</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATEOFMEASUREMENT"
+                  name="DATEOFMEASUREMENT"
+                  required
+                />
+              </div>
+              <input
+                type="hidden"
+                id="schemeId"
+                name="schemeId"
+                value="678823e265155979a42ebabd"
+              />
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+            </form>
+            <div
+              id="successMessage"
+              class="alert alert-success mt-3"
+              style="display: none"
+            ></div>
+
+            <!-- Spinner to show when form is submitted -->
+            <div
+              id="loadingSpinner"
+              class="spinner-border text-primary"
+              role="status"
+              style="
+                display: none;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+              "
+            >
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"
+    ></script>
+
+    <script>
+      $(document).ready(function () {
+        $("#editModal").on("shown.bs.modal", function () {
+          $("#Sch_Ref").focus() // Set focus to the first input field when modal is shown
+        })
+
+        // Handle form submission
+        $("#editForm").on("submit", function (event) {
+          event.preventDefault() // Prevent the default form submission
+
+          // Show the spinner
+          $("#loadingSpinner").show()
+          $("#successMessage").hide() // Hide success message
+
+          // Simulate AJAX form submission
+          $.ajax({
+            url: $(this).attr("action"), // Use the form action
+            type: $(this).attr("method"), // Use the form method
+            data: $(this).serialize(), // Serialize the form data
+            success: function (response) {
+              // Assuming response is a success message; you can customize this based on your server logic
+              $("#successMessage").text("Changes saved successfully!").show()
+
+              // Optionally, you can close the modal after showing the message
+              setTimeout(function () {
+                $("#successMessage").fadeOut(1000, function () {
+                  $("#editModal").modal("hide")
+                })
+              }, 2000) // Close the modal after 3 seconds
+            },
+            error: function () {
+              // Handle error if needed
+              alert("An error occurred. Please try again.")
+            },
+            complete: function () {
+              // Hide the spinner once the request is complete
+              $("#loadingSpinner").hide()
+            },
+          })
+        })
+      })
+    </script>
+  </body>
+</html>
+
+<!-- better -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Schemes</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"
+    />
+    <style>
+      body {
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+      .table-container {
+        margin: 0 auto;
+        max-width: 100%;
+      }
+      #servicesTableBody button {
+        margin: 0 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container">
+        <h1 id="nav-header">EWA "Mohamed Rajab"</h1>
+        <div class="nav-links">
+          <a href="/auth/sign-out" class="btn btn-primary">Sign Out</a>
+          <a href="/schemes/dashBoard" class="btn btn-primary">Home</a>
+          <a href="/schemes/new" class="btn btn-primary">Add New Scheme</a>
+        </div>
+      </div>
+    </nav>
+
+    <h1 class="text-center">Schemes Table</h1>
+
+    <div class="container table-container">
+      <table class="table table-bordered table-hover text-center" id="myTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Scheme Reference</th>
+            <th>Job Number</th>
+            <th>Block</th>
+            <th>Supervisor</th>
+            <th>Contractor Name</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Percentage</th>
+            <th>Date of Completion</th>
+            <th>Application Status</th>
+            <th>Date of Measurement</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="servicesTableBody">
+          <% populatedSchemes.forEach((populatedScheme, index) => { %>
+          <tr data-id="<%= populatedScheme.id %>">
+            <th scope="row"><%= index + 1 %></th>
+            <td data-searchable><%= populatedScheme.Sch_Ref %></td>
+            <td data-searchable><%= populatedScheme.Job_no %></td>
+            <td data-searchable><%= populatedScheme.BLK %></td>
+            <td data-searchable><%= populatedScheme.SUPERVISOR %></td>
+            <td data-searchable><%= populatedScheme.ContractorName %></td>
+            <td data-searchable><%= populatedScheme.Title1 %></td>
+            <td data-searchable><%= populatedScheme.STATUS %></td>
+            <td data-searchable><%= populatedScheme.PERCENTAGE %></td>
+            <td data-searchable>
+              <%= populatedScheme.DATE_OF_COMPLETE ?
+              populatedScheme.DATE_OF_COMPLETE.toISOString().split('T')[0].replace(/-/g,
+              '/') : '' %>
+            </td>
+            <td data-searchable><%= populatedScheme.APPSTATUS %></td>
+            <td data-searchable>
+              <%= populatedScheme.DATEOFMEASUREMENT ?
+              populatedScheme.DATEOFMEASUREMENT.toISOString().split('T')[0].replace(/-/g,
+              '/') : '' %>
+            </td>
+            <td>
+              <button
+                class="btn btn-primary btn-block btn-sm edit-button me-2
+                data-bs-toggle="modal"
+                data-bs-target="#editModal"
+                data-id="<%= populatedScheme.id %>"
+                data-scheme-ref="<%= populatedScheme.Sch_Ref %>"
+                data-job-number="<%= populatedScheme.Job_no %>"
+                data-block="<%= populatedScheme.BLK %>"
+                data-supervisor="<%= populatedScheme.SUPERVISOR %>"
+                data-contractor-name="<%= populatedScheme.ContractorName %>"
+                data-title="<%= populatedScheme.Title1 %>"
+                data-status="<%= populatedScheme.STATUS %>"
+                data-percentage="<%= populatedScheme.PERCENTAGE %>"
+                data-date-complete="<%= populatedScheme.DATE_OF_COMPLETE %>"
+                data-app-status="<%= populatedScheme.APPSTATUS %>"
+                data-date-measurement="<%= populatedScheme.DATEOFMEASUREMENT %>"
+              >
+                Edit
+              </button>
+              <br />
+              <form
+                action="/schemes/delete/<%= populatedScheme.id %>?_method=DELETE"
+                method="POST"
+                style="display: inline"
+                class="delete-form ms-2"
+              >
+                <button type="submit" class="btn btn-block btn-danger btn-sm">
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Edit Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Scheme</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm" action="#" method="POST">
+              <div class="mb-3">
+                <label for="Sch_Ref" class="form-label">Scheme Reference</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Sch_Ref"
+                  name="Sch_Ref"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Job_no" class="form-label">Job Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Job_no"
+                  name="Job_no"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="BLK" class="form-label">Block</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="BLK"
+                  name="BLK"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="SUPERVISOR" class="form-label">Supervisor</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="SUPERVISOR"
+                  name="SUPERVISOR"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="ContractorName" class="form-label"
+                  >Contractor Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ContractorName"
+                  name="ContractorName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Title1" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Title1"
+                  name="Title1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="STATUS" class="form-label">Status</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="STATUS"
+                  name="STATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="PERCENTAGE" class="form-label">Percentage</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="PERCENTAGE"
+                  name="PERCENTAGE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATE_OF_COMPLETE" class="form-label"
+                  >Date of Completion</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATE_OF_COMPLETE"
+                  name="DATE_OF_COMPLETE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="APPSTATUS" class="form-label"
+                  >Application Status</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="APPSTATUS"
+                  name="APPSTATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATEOFMEASUREMENT" class="form-label"
+                  >Date of Measurement</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATEOFMEASUREMENT"
+                  name="DATEOFMEASUREMENT"
+                  required
+                />
+              </div>
+              <input type="hidden" id="schemeId" name="schemeId" />
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+                <span
+                  class="spinner-border spinner-border-sm ml-2"
+                  role="status"
+                  id="loadingSpinner"
+                  style="display: none"
+                ></span>
+              </button>
+            </form>
+            <div
+              id="successMessage"
+              class="alert alert-success mt-3"
+              style="display: none"
+            ></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div style="position: fixed; top: 1rem; right: 1rem; z-index: 10000">
+      <div
+        class="toast"
+        id="deleteToast"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        data-delay="2000"
+      >
+        <div class="toast-header bg-danger">
+          <strong class="mr-auto">Delete Status</strong>
+          <button
+            type="button"
+            class="ml-2 mb-1 close"
+            data-dismiss="toast"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="toast-body">Scheme deleted successfully!</div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Populate modal fields on click
+        $("#servicesTableBody").on("click", ".edit-button", function () {
+          $("#schemeId").val($(this).data("id"))
+          $("#Sch_Ref").val($(this).data("scheme-ref"))
+          $("#Job_no").val($(this).data("job-number"))
+          $("#BLK").val($(this).data("block"))
+          $("#SUPERVISOR").val($(this).data("supervisor"))
+          $("#ContractorName").val($(this).data("contractor-name"))
+          $("#Title1").val($(this).data("title"))
+          $("#STATUS").val($(this).data("status"))
+          $("#PERCENTAGE").val($(this).data("percentage"))
+          $("#DATE_OF_COMPLETE").val(
+            $(this).data("date-complete")
+              ? $(this).data("date-complete").split("T")[0]
+              : ""
+          )
+          $("#APPSTATUS").val($(this).data("app-status"))
+          $("#DATEOFMEASUREMENT").val(
+            $(this).data("date-measurement")
+              ? $(this).data("date-measurement").split("T")[0]
+              : ""
+          )
+
+          $("#editForm").attr(
+            "action",
+            "/schemes/update/" + $(this).data("id") + "?_method=PUT"
+          )
+        })
+
+        // Handle form submission
+        $("#editForm").on("submit", function (event) {
+          event.preventDefault() // Prevent the default form submission
+
+          // Show the spinner
+          $("#loadingSpinner").show()
+          $("#successMessage").hide() // Hide success message
+
+          $.ajax({
+            url: $(this).attr("action"), // Use the form action
+            type: $(this).attr("method"), // Use the form method
+            data: $(this).serialize(), // Serialize the form data
+            success: function (response) {
+              $("#successMessage").text("Changes saved successfully!").show()
+              setTimeout(function () {
+                $("#successMessage").fadeOut(1000, function () {
+                  $("#editModal").modal("hide")
+                })
+              }, 2000) // Close the modal after 3 seconds
+            },
+            error: function () {
+              alert("An error occurred. Please try again.")
+            },
+            complete: function () {
+              // Hide the spinner once the request is complete
+              $("#loadingSpinner").hide()
+            },
+          })
+        })
+
+        $(".delete-form").on("submit", function (event) {
+          event.preventDefault() // Prevent default form submission
+          const form = $(this)
+          if (confirm("Are you sure you want to delete this item?")) {
+            $.ajax({
+              url: form.attr("action"),
+              method: "POST",
+              success: function () {
+                $("#deleteToast").toast("show")
+                form.closest("tr").remove()
+              },
+              error: function () {
+                alert("Could not delete the scheme.")
+              },
+            })
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
+
+<!-- the best -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Schemes</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"
+    />
+    <style>
+      body {
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+      .table-container {
+        margin: 0 auto;
+        max-width: 100%;
+      }
+      .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1050;
+        pointer-events: none; /* Ensure underlying elements can be clicked */
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container">
+        <h1 id="nav-header">EWA "Mohamed Rajab"</h1>
+        <div class="nav-links">
+          <a href="/auth/sign-out" class="btn btn-primary">Sign Out</a>
+          <a href="/schemes/dashBoard" class="btn btn-primary">Home</a>
+          <a href="/schemes/new" class="btn btn-primary">Add New Scheme</a>
+        </div>
+      </div>
+    </nav>
+
+    <h1 class="text-center">Schemes Table</h1>
+
+    <div class="container table-container">
+      <table class="table table-bordered table-hover text-center" id="myTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Scheme Reference</th>
+            <th>Job Number</th>
+            <th>Block</th>
+            <th>Supervisor</th>
+            <th>Contractor Name</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Percentage</th>
+            <th>Date of Completion</th>
+            <th>Application Status</th>
+            <th>Date of Measurement</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="servicesTableBody">
+          <% populatedSchemes.forEach((populatedScheme, index) => { %>
+          <tr data-id="<%= populatedScheme.id %>">
+            <th scope="row"><%= index + 1 %></th>
+            <td data-searchable><%= populatedScheme.Sch_Ref %></td>
+            <td data-searchable><%= populatedScheme.Job_no %></td>
+            <td data-searchable><%= populatedScheme.BLK %></td>
+            <td data-searchable><%= populatedScheme.SUPERVISOR %></td>
+            <td data-searchable><%= populatedScheme.ContractorName %></td>
+            <td data-searchable><%= populatedScheme.Title1 %></td>
+            <td data-searchable><%= populatedScheme.STATUS %></td>
+            <td data-searchable><%= populatedScheme.PERCENTAGE %></td>
+            <td data-searchable>
+              <%= populatedScheme.DATE_OF_COMPLETE ?
+              populatedScheme.DATE_OF_COMPLETE.toISOString().split('T')[0].replace(/-/g,
+              '/') : '' %>
+            </td>
+            <td data-searchable><%= populatedScheme.APPSTATUS %></td>
+            <td data-searchable>
+              <%= populatedScheme.DATEOFMEASUREMENT ?
+              populatedScheme.DATEOFMEASUREMENT.toISOString().split('T')[0].replace(/-/g,
+              '/') : '' %>
+            </td>
+            <td>
+              <div class="d-flex justify-content-between">
+                <button
+                  class="btn btn-primary btn-block btn-sm edit-button me-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editModal"
+                  data-id="<%= populatedScheme.id %>"
+                  data-scheme-ref="<%= populatedScheme.Sch_Ref %>"
+                  data-job-number="<%= populatedScheme.Job_no %>"
+                  data-block="<%= populatedScheme.BLK %>"
+                  data-supervisor="<%= populatedScheme.SUPERVISOR %>"
+                  data-contractor-name="<%= populatedScheme.ContractorName %>"
+                  data-title="<%= populatedScheme.Title1 %>"
+                  data-status="<%= populatedScheme.STATUS %>"
+                  data-percentage="<%= populatedScheme.PERCENTAGE %>"
+                  data-date-complete="<%= populatedScheme.DATE_OF_COMPLETE ? populatedScheme.DATE_OF_COMPLETE.toISOString() : '' %>"
+                  data-app-status="<%= populatedScheme.APPSTATUS %>"
+                  data-date-measurement="<%= populatedScheme.DATEOFMEASUREMENT ? populatedScheme.DATEOFMEASUREMENT.toISOString() : '' %>"
+                >
+                  Edit
+                </button>
+                <form
+                  action="/schemes/delete/<%= populatedScheme.id %>?_method=DELETE"
+                  method="POST"
+                  style="display: inline"
+                  class="delete-form"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-block btn-danger btn-sm me-1"
+                  >
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Edit Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Scheme</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm" action="#" method="POST">
+              <div class="mb-3">
+                <label for="Sch_Ref" class="form-label">Scheme Reference</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Sch_Ref"
+                  name="Sch_Ref"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Job_no" class="form-label">Job Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Job_no"
+                  name="Job_no"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="BLK" class="form-label">Block</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="BLK"
+                  name="BLK"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="SUPERVISOR" class="form-label">Supervisor</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="SUPERVISOR"
+                  name="SUPERVISOR"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="ContractorName" class="form-label">
+                  Contractor Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ContractorName"
+                  name="ContractorName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Title1" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Title1"
+                  name="Title1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="STATUS" class="form-label">Status</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="STATUS"
+                  name="STATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="PERCENTAGE" class="form-label">Percentage</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="PERCENTAGE"
+                  name="PERCENTAGE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATE_OF_COMPLETE" class="form-label"
+                  >Date of Completion</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATE_OF_COMPLETE"
+                  name="DATE_OF_COMPLETE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="APPSTATUS" class="form-label"
+                  >Application Status</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="APPSTATUS"
+                  name="APPSTATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATEOFMEASUREMENT" class="form-label"
+                  >Date of Measurement</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATEOFMEASUREMENT"
+                  name="DATEOFMEASUREMENT"
+                  required
+                />
+              </div>
+              <input type="hidden" id="schemeId" name="schemeId" />
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+                <span
+                  class="spinner-border spinner-border-sm ml-2"
+                  role="status"
+                  id="loadingSpinner"
+                  style="display: none"
+                ></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast container for notifications -->
+    <div class="toast-container">
+      <div
+        id="successToast"
+        class="toast align-items-center text-white bg-success"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        style="display: none"
+      >
+        <div class="d-flex">
+          <div class="toast-body">Changes saved successfully!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+      <div
+        id="deleteToast"
+        class="toast align-items-center text-white bg-danger"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        style="display: none"
+      >
+        <div class="d-flex">
+          <div class="toast-body">Scheme deleted successfully!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+
+    <script>
+      $(document).ready(function () {
+        // Populate modal fields on click
+        $("#servicesTableBody").on("click", ".edit-button", function () {
+          $("#schemeId").val($(this).data("id"))
+          $("#Sch_Ref").val($(this).data("scheme-ref"))
+          $("#Job_no").val($(this).data("job-number"))
+          $("#BLK").val($(this).data("block"))
+          $("#SUPERVISOR").val($(this).data("supervisor"))
+          $("#ContractorName").val($(this).data("contractor-name"))
+          $("#Title1").val($(this).data("title"))
+          $("#STATUS").val($(this).data("status"))
+          $("#PERCENTAGE").val($(this).data("percentage"))
+
+          // Use the correct date formats
+          $("#DATE_OF_COMPLETE").val(
+            $(this).data("date-complete")
+              ? new Date($(this).data("date-complete"))
+                  .toISOString()
+                  .split("T")[0]
+              : ""
+          )
+          $("#APPSTATUS").val($(this).data("app-status"))
+          $("#DATEOFMEASUREMENT").val(
+            $(this).data("date-measurement")
+              ? new Date($(this).data("date-measurement"))
+                  .toISOString()
+                  .split("T")[0]
+              : ""
+          )
+
+          $("#editForm").attr(
+            "action",
+            "/schemes/update/" + $(this).data("id") + "?_method=PUT"
+          )
+        })
+
+        // Handle form submission
+        $("#editForm").on("submit", function (event) {
+          event.preventDefault() // Prevent the default form submission
+
+          // Show the spinner
+          $("#loadingSpinner").show()
+
+          $.ajax({
+            url: $(this).attr("action"), // Use the form action
+            type: $(this).attr("method"), // Use the form method
+            data: $(this).serialize(), // Serialize the form data
+            success: function (response) {
+              // Update the table row with new values
+              const rowId = $("#schemeId").val()
+              const row = $("#servicesTableBody tr[data-id='" + rowId + "']")
+              row.remove()
+
+              var newRow = `<tr data-id='${rowId}'>
+                            <th scope="row">${row
+                              .find("th")
+                              .first()
+                              .text()}</th>
+                            <td data-searchable>${$("#Sch_Ref").val()}</td>
+                            <td data-searchable>${$("#Job_no").val()}</td>
+                            <td data-searchable>${$("#BLK").val()}</td>
+                            <td data-searchable>${$("#SUPERVISOR").val()}</td>
+                            <td data-searchable>${$(
+                              "#ContractorName"
+                            ).val()}</td>
+                            <td data-searchable>${$("#Title1").val()}</td>
+                            <td data-searchable>${$("#STATUS").val()}</td>
+                            <td data-searchable>${$("#PERCENTAGE").val()}</td>
+                            <td data-searchable>${$(
+                              "#DATE_OF_COMPLETE"
+                            ).val()}</td>
+                            <td data-searchable>${$("#APPSTATUS").val()}</td>
+                            <td data-searchable>${$(
+                              "#DATEOFMEASUREMENT"
+                            ).val()}</td>
+                            <td style="display:block">
+                                <button class="btn btn-primary btn-block btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-id="${rowId}" data-scheme-ref="${$(
+                "#Sch_Ref"
+              ).val()}" data-job-number="${$("#Job_no").val()}" data-block="${$(
+                "#BLK"
+              ).val()}" data-supervisor="${$(
+                "#SUPERVISOR"
+              ).val()}" data-contractor-name="${$(
+                "#ContractorName"
+              ).val()}" data-title="${$("#Title1").val()}" data-status="${$(
+                "#STATUS"
+              ).val()}" data-percentage="${$(
+                "#PERCENTAGE"
+              ).val()}">Edit</button>
+                                <form action="/schemes/delete/${rowId}?_method=DELETE" method="POST" style="display: inline" class="delete-form">
+                                    <button type="submit" class="btn btn-block btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>`
+              $("#servicesTableBody").append(newRow)
+
+              // Show the success toast after modal has been hidden
+              $("#editModal").on("hidden.bs.modal", function () {
+                const toast = new bootstrap.Toast($("#successToast"))
+                $("#successToast").show()
+                toast.show() // Show success message toast
+              })
+
+              // Hide modal
+              $("#editModal").modal("hide")
+            },
+            error: function () {
+              alert("An error occurred. Please try again.")
+            },
+            complete: function () {
+              // Hide the spinner once the request is complete
+              $("#loadingSpinner").hide()
+            },
+          })
+        })
+
+        // Show delete toast and remove row on delete action
+        $(".delete-form").on("submit", function (event) {
+          event.preventDefault() // Prevent default form submission
+          const form = $(this)
+          if (confirm("Are you sure you want to delete this item?")) {
+            $.ajax({
+              url: form.attr("action"),
+              method: "POST",
+              success: function () {
+                // Show the delete toast
+                const toast = new bootstrap.Toast($("#deleteToast"))
+                $("#deleteToast").show()
+                toast.show() // Show delete toast notification
+                form.closest("tr").remove() // Remove the row from the table
+              },
+              error: function () {
+                alert("Could not delete the scheme.")
+              },
+            })
+          }
+        })
+      })
+    </script>
+  </body>
+</html>
+
+<!-- the best -->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Schemes</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"
+    />
+    <style>
+      body {
+        margin-left: 30px;
+        margin-right: 30px;
+      }
+      .table-container {
+        margin: 0 auto;
+        max-width: 100%;
+      }
+      .toast-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1050;
+        pointer-events: none; /* Ensure underlying elements can be clicked */
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-light bg-light">
+      <div class="container">
+        <h1 id="nav-header">EWA "Mohamed Rajab"</h1>
+        <div class="nav-links">
+          <a href="/auth/sign-out" class="btn btn-primary">Sign Out</a>
+          <a href="/schemes/dashBoard" class="btn btn-primary">Home</a>
+          <a href="/schemes/new" class="btn btn-primary">Add New Scheme</a>
+        </div>
+      </div>
+    </nav>
+
+    <h1 class="text-center">Schemes Table</h1>
+
+    <div class="container table-container">
+      <table class="table table-bordered table-hover text-center" id="myTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Scheme Reference</th>
+            <th>Job Number</th>
+            <th>Block</th>
+            <th>Supervisor</th>
+            <th>Contractor Name</th>
+            <th>Title</th>
+            <th>Status</th>
+            <th>Percentage</th>
+            <th>Date of Completion</th>
+            <th>Application Status</th>
+            <th>Date of Measurement</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="servicesTableBody">
+          <% populatedSchemes.forEach((populatedScheme, index) => { %>
+          <tr data-id="<%= populatedScheme.id %>">
+            <th scope="row"><%= index + 1 %></th>
+            <td data-searchable><%= populatedScheme.Sch_Ref %></td>
+            <td data-searchable><%= populatedScheme.Job_no %></td>
+            <td data-searchable><%= populatedScheme.BLK %></td>
+            <td data-searchable><%= populatedScheme.SUPERVISOR %></td>
+            <td data-searchable><%= populatedScheme.ContractorName %></td>
+            <td data-searchable><%= populatedScheme.Title1 %></td>
+            <td data-searchable><%= populatedScheme.STATUS %></td>
+            <td data-searchable><%= populatedScheme.PERCENTAGE %></td>
+            <td data-searchable>
+              <%= populatedScheme.DATE_OF_COMPLETE ?
+              populatedScheme.DATE_OF_COMPLETE.toISOString().split('T')[0].replace(/-/g,
+              '/') : '' %>
+            </td>
+            <td data-searchable><%= populatedScheme.APPSTATUS %></td>
+            <td data-searchable>
+              <%= populatedScheme.DATEOFMEASUREMENT ?
+              populatedScheme.DATEOFMEASUREMENT.toISOString().split('T')[0].replace(/-/g,
+              '/') : '' %>
+            </td>
+            <td>
+              <div class="d-flex justify-content-between">
+                <button
+                  class="btn btn-primary btn-block btn-sm edit-button me-1"
+                  data-bs-toggle="modal"
+                  data-bs-target="#editModal"
+                  data-id="<%= populatedScheme.id %>"
+                  data-scheme-ref="<%= populatedScheme.Sch_Ref %>"
+                  data-job-number="<%= populatedScheme.Job_no %>"
+                  data-block="<%= populatedScheme.BLK %>"
+                  data-supervisor="<%= populatedScheme.SUPERVISOR %>"
+                  data-contractor-name="<%= populatedScheme.ContractorName %>"
+                  data-title="<%= populatedScheme.Title1 %>"
+                  data-status="<%= populatedScheme.STATUS %>"
+                  data-percentage="<%= populatedScheme.PERCENTAGE %>"
+                  data-date-complete="<%= populatedScheme.DATE_OF_COMPLETE ? populatedScheme.DATE_OF_COMPLETE.toISOString() : '' %>"
+                  data-app-status="<%= populatedScheme.APPSTATUS %>"
+                  data-date-measurement="<%= populatedScheme.DATEOFMEASUREMENT ? populatedScheme.DATEOFMEASUREMENT.toISOString() : '' %>"
+                >
+                  Edit
+                </button>
+                <form
+                  action="/schemes/delete/<%= populatedScheme.id %>?_method=DELETE"
+                  method="POST"
+                  style="display: inline"
+                  class="delete-form"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-block btn-danger btn-sm me-1"
+                  >
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Edit Modal -->
+    <div
+      class="modal fade"
+      id="editModal"
+      tabindex="-1"
+      aria-labelledby="editModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModalLabel">Edit Scheme</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="editForm" action="#" method="POST">
+              <div class="mb-3">
+                <label for="Sch_Ref" class="form-label">Scheme Reference</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Sch_Ref"
+                  name="Sch_Ref"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Job_no" class="form-label">Job Number</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Job_no"
+                  name="Job_no"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="BLK" class="form-label">Block</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="BLK"
+                  name="BLK"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="SUPERVISOR" class="form-label">Supervisor</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="SUPERVISOR"
+                  name="SUPERVISOR"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="ContractorName" class="form-label">
+                  Contractor Name</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ContractorName"
+                  name="ContractorName"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="Title1" class="form-label">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="Title1"
+                  name="Title1"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="STATUS" class="form-label">Status</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="STATUS"
+                  name="STATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="PERCENTAGE" class="form-label">Percentage</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="PERCENTAGE"
+                  name="PERCENTAGE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATE_OF_COMPLETE" class="form-label"
+                  >Date of Completion</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATE_OF_COMPLETE"
+                  name="DATE_OF_COMPLETE"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="APPSTATUS" class="form-label"
+                  >Application Status</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="APPSTATUS"
+                  name="APPSTATUS"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="DATEOFMEASUREMENT" class="form-label"
+                  >Date of Measurement</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="DATEOFMEASUREMENT"
+                  name="DATEOFMEASUREMENT"
+                  required
+                />
+              </div>
+              <input type="hidden" id="schemeId" name="schemeId" />
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+                <span
+                  class="spinner-border spinner-border-sm ml-2"
+                  role="status"
+                  id="loadingSpinner"
+                  style="display: none"
+                ></span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast container for notifications -->
+    <div class="toast-container">
+      <div
+        id="successToast"
+        class="toast align-items-center text-white bg-success"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        style="display: none"
+      >
+        <div class="d-flex">
+          <div class="toast-body">Changes saved successfully!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+      <div
+        id="deleteToast"
+        class="toast align-items-center text-white bg-danger"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        style="display: none"
+      >
+        <div class="d-flex">
+          <div class="toast-body">Scheme deleted successfully!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+   <script>
+  // Delete function
+  $(".delete-form").on("submit", function (event) {
+    event.preventDefault(); // Prevent default form submission
+    const form = $(this);
+
+    $.ajax({
+      type: 'DELETE',
+      url: form.attr("action"), // get the URL of the delete link
+      data: form.serialize(), // Get the form data
+      success: function (response) {
+        if (response) {
+          const row = form.closest("tr");
+          row.fadeOut(function () {
+            row.remove();
+          });
+
+          const toast = new bootstrap.Toast($("#deleteToast"));
+          $("#deleteToast").show();
+          toast.show(); // Show delete toast notification
+
+          // Listen for when the toast is hidden
+          toast.on('hidden.bs.toast', function () {
+            location.reload(); // Refresh the page
+          });
+        }
+      },
+      error: function (xhr, status, error) {
+        console.error(error);
+      }
+    });
+
+    return false;
+  });
+
+  // Handle form submission for editing
+  $("#editForm").on("submit", function (event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    // Show the spinner
+    $("#loadingSpinner").show();
+
+    $.ajax({
+      // Existing AJAX call configuration...
+      success: function (response) {
+        // Update the table row logic...
+
+        // Show the success toast after modal has been hidden
+        $("#editModal").on("hidden.bs.modal", function () {
+          const toast = new bootstrap.Toast($("#successToast"));
+          $("#successToast").show();
+          toast.show(); // Show success message toast
+
+          // Listen for when the toast is hidden
+          toast.on('hidden.bs.toast', function () {
+            location.reload(); // Refresh the page
+          });
+        });
+
+        // Hide modal
+        $("#editModal").modal("hide");
+      },
+ 
+    });
+  });
+     window.reload();
+</script>
+  </body>
+</html>

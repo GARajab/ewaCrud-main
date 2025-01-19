@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Dashboard</title>
+    <%- include('../partials/header.ejs') %>
+    <link
+      rel="stylesheet"
+      href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+      body {
+        background-color: #eee;
+      }
+    </style>
+  </head>
+  <body onload="pushNotify()">
+    <section class="py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col">
+            <nav
+              aria-label="breadcrumb"
+              class="bg-body-tertiary rounded-3 p-3 mb-4"
+            >
+              <ol class="breadcrumb mb-0">
+                <li
+                  class="breadcrumb-item mx-auto fs-1 active"
+                  aria-current="page"
+                >
+                  <%= user.cpr %> Dashboard
+                </li>
+              </ol>
+              <a
+                href="/auth/sign-out"
+                class="btn btn-danger"
+                onclick="clearLoginNotification()"
+                >Sign Out</a
+              >
+            </nav>
+          </div>
+        </div>
+
+        <div class="row align-items-center">
+          <div class="col-lg-4">
+            <div class="card mb-4">
+              <div class="card-body text-center">
+                <img
+                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                  alt="avatar"
+                  class="rounded-circle img-fluid"
+                  style="width: 150px"
+                />
+                <h5 class="my-3"><%= user.cpr %></h5>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Full Name</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p class="text-muted mb-0"><%= user.cpr %></p>
+                  </div>
+                </div>
+                <hr />
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Email</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <p class="text-muted mb-0"><%= user.email %></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-4">
+                <div class="card mb-4 mb-md-0 text-center">
+                  <div class="card-body">
+                    <p class="mb-4">
+                      <span class="text-primary font-italic me-1">
+                        <a href="/schemes/allSchemes" class="btn btn-primary"
+                          >All Schemes</a
+                        >
+                      </span>
+                      <a href="/schemes/new" class="btn btn-primary"
+                        >New Scheme</a
+                      >
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Toast Notification -->
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <script>
+      const showMessage = "<%= messages %>"
+      if (showMessage) {
+        Toastify({
+          text: showMessage,
+          className: "success",
+          style: {
+            background: "#28a745", // Green color for success message
+            color: "white",
+          },
+        }).showToast()
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <title>Sign Up</title>
+  <%- include('../partials/header.ejs') %>
+  <body>
+    <div class="container" style="margin-top: -160px">
+      <h1 style="display: flex; justify-content: center; margin-top: 150px">
+        Create A New Account.
+      </h1>
+      <br />
+      <div class="row">
+        <div class="col-md-5 mx-auto">
+          <div id="first">
+            <form action="/auth/sign-up" method="POST" name="login">
+              <div class="form-group">
+                <label for="cpr">CPR</label>
+                <input
+                  type="text"
+                  name="cpr"
+                  class="form-control"
+                  id="cpr"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Your CPR"
+                  required
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="email">Email ID</label>
+                <input
+                  type="email"
+                  name="email"
+                  class="form-control"
+                  id="email"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Your Email ID"
+                  required
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  class="form-control"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Your Password"
+                  required
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  class="form-control"
+                  aria-describedby="emailHelp"
+                  placeholder="Enter Your Password Again"
+                  required
+                />
+              </div>
+              <br />
+              <div class="col-md-14 text-center">
+                <button
+                  type="submit"
+                  class="btn btn-block mybtn btn-primary tx-tfm"
+                >
+                  Sign Up
+                </button>
+              </div>
+              <br />
+              <p class="text-center">
+                You have account?
+                <a href="/auth/sign-in" id="signup">Sign in here</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/toastify-js"
+    ></script>
+    <!-- Toast Notification -->
+    <script>
+      Toastify({
+        text: "<%= messages %>",
+        className: "danger",
+        duration: 5000,
+        style: {
+          background: "#D21F1FFF",
+          color: "white",
+        },
+      }).showToast()
+    </script>
+  </body>
+</html>
