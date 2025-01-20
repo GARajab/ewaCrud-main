@@ -29,6 +29,24 @@
         z-index: 1050;
         pointer-events: none; /* Ensure underlying elements can be clicked */
       }
+      /* Spinner overlay styles */
+.spinner-overlay {
+  position: fixed;
+  top: 0; /* Align top */
+  left: 0; /* Align left */
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: none; /* Initially hidden */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  z-index: 2000; /* High z-index to display above other elements */
+}
+
+/* Add styles for visibility */
+.spinner-overlay.show {
+  display: flex; /* Change to flex on show */
+}
     </style>
   </head>
   <body>
@@ -126,7 +144,7 @@
           <% }) %>
         </tbody>
       </table>
-    </div>
+     
 
     <!-- Edit Modal -->
     <div
@@ -190,8 +208,8 @@
                 />
               </div>
               <div class="mb-3">
-                <label for="ContractorName" class="form-label">
-                  Contractor Name</label
+                <label for="ContractorName" class="form-label"
+                  >Contractor Name</label
                 >
                 <input
                   type="text"
@@ -283,6 +301,13 @@
       </div>
     </div>
 
+    <!-- Overlay for loading spinner -->
+    <div class="spinner-overlay" id="loadingOverlay">
+      <div class="spinner-border text-light" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
     <!-- Toast container for notifications -->
     <div class="toast-container">
       <div
@@ -331,15 +356,11 @@
       $(document).ready(function () {
         // Maintain the style of the edit and delete buttons
         function createEditButton(data) {
-          return `<button class="btn btn-primary btn-block btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-id="${data.id}" data-scheme-ref="${data.Sch_Ref}" data-job-number="${data.Job_no}" data-block="${data.BLK}" data-supervisor="${data.SUPERVISOR}" data-contractor-name="${data.ContractorName}" data-title="${data.Title1}" data-status="${data.STATUS}" data-percentage="${data.PERCENTAGE}" data-date-complete="${data.DATE_OF_COMPLETE}" data-app-status="${data.APPSTATUS}" data-date-measurement="${data.DATEOFMEASUREMENT}">
-              Edit
-            </button>`
+          return `<button class="btn btn-primary btn-block btn-sm edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-id="${data.id}" data-scheme-ref="${data.Sch_Ref}" data-job-number="${data.Job_no}" data-block="${data.BLK}" data-supervisor="${data.SUPERVISOR}" data-contractor-name="${data.ContractorName}" data-title="${data.Title1}" data-status="${data.STATUS}" data-percentage="${data.PERCENTAGE}" data-date-complete="${data.DATE_OF_COMPLETE}" data-app-status="${data.APPSTATUS}" data-date-measurement="${data.DATEOFMEASUREMENT}">Edit</button>`
         }
 
         function createDeleteButton(id) {
-          return `<form action="/schemes/delete/${id}?_method=DELETE" method="POST" style="display: inline" class="delete-form">
-              <button type="submit" class="btn btn-block btn-danger btn-sm">Delete</button>
-            </form>`
+          return `<form action="/schemes/delete/${id}?_method=DELETE" method="POST" style="display: inline" class="delete-form"><button type="submit" class="btn btn-block btn-danger btn-sm">Delete</button></form>`
         }
 
         // Populate modal fields on click
@@ -380,74 +401,71 @@
         })
 
         // Handle form submission
-        $("#editForm").on("submit", function (event) {
-          event.preventDefault() // Prevent the default form submission
+$("#editForm").on("submit", function (event) {
+  event.preventDefault(); // Prevent the default form submission
 
-          // Show spinner
-          $("#loadingSpinner").show()
+// Show overlay and spinner
+$("#loadingOverlay").addClass('show'); // Show spinner overlay here
+  $.ajax({
+    url: $(this).attr("action"),
+    type: $(this).attr("method"),
+    data: $(this).serialize(),
+    success: function (response) {
+      const rowId = $("#schemeId").val();
+      const row = $("#servicesTableBody tr[data-id='" + rowId + "']");
+      row.remove();
 
-          $.ajax({
-            url: $(this).attr("action"),
-            type: $(this).attr("method"),
-            data: $(this).serialize(),
-            success: function (response) {
-              const rowId = $("#schemeId").val()
-              const row = $("#servicesTableBody tr[data-id='" + rowId + "']")
-              row.remove()
+      var newRowData = {
+        id: rowId,
+        Sch_Ref: $("#Sch_Ref").val(),
+        Job_no: $("#Job_no").val(),
+        BLK: $("#BLK").val(),
+        SUPERVISOR: $("#SUPERVISOR").val(),
+        ContractorName: $("#ContractorName").val(),
+        Title1: $("#Title1").val(),
+        STATUS: $("#STATUS").val(),
+        PERCENTAGE: $("#PERCENTAGE").val(),
+      };
 
-              var newRowData = {
-                id: rowId,
-                Sch_Ref: $("#Sch_Ref").val(),
-                Job_no: $("#Job_no").val(),
-                BLK: $("#BLK").val(),
-                SUPERVISOR: $("#SUPERVISOR").val(),
-                ContractorName: $("#ContractorName").val(),
-                Title1: $("#Title1").val(),
-                STATUS: $("#STATUS").val(),
-                PERCENTAGE: $("#PERCENTAGE").val(),
-              }
+      var newRow = `<tr data-id='${rowId}'>
+            <th scope="row">${row.find("th").first().text()}</th>
+            <td data-searchable>${newRowData.Sch_Ref}</td>
+            <td data-searchable>${newRowData.Job_no}</td>
+            <td data-searchable>${newRowData.BLK}</td>
+            <td data-searchable>${newRowData.SUPERVISOR}</td>
+            <td data-searchable>${newRowData.ContractorName}</td>
+            <td data-searchable>${newRowData.Title1}</td>
+            <td data-searchable>${newRowData.STATUS}</td>
+            <td data-searchable>${newRowData.PERCENTAGE}</td>
+            <td data-searchable>${$("#DATE_OF_COMPLETE").val()}</td>
+            <td data-searchable>${$("#APPSTATUS").val()}</td>
+            <td data-searchable>${$("#DATEOFMEASUREMENT").val()}</td>
+            <td>${createEditButton(newRowData)} ${createDeleteButton(rowId)}</td>
+          </tr>`;
 
-              var newRow = `<tr data-id='${rowId}'>
-                        <th scope="row">${row.find("th").first().text()}</th>
-                        <td data-searchable>${newRowData.Sch_Ref}</td>
-                        <td data-searchable>${newRowData.Job_no}</td>
-                        <td data-searchable>${newRowData.BLK}</td>
-                        <td data-searchable>${newRowData.SUPERVISOR}</td>
-                        <td data-searchable>${newRowData.ContractorName}</td>
-                        <td data-searchable>${newRowData.Title1}</td>
-                        <td data-searchable>${newRowData.STATUS}</td>
-                        <td data-searchable>${newRowData.PERCENTAGE}</td>
-                        <td data-searchable>${$("#DATE_OF_COMPLETE").val()}</td>
-                        <td data-searchable>${$("#APPSTATUS").val()}</td>
-                        <td data-searchable>${$(
-                          "#DATEOFMEASUREMENT"
-                        ).val()}</td>
-                        <td>${createEditButton(
-                          newRowData
-                        )} ${createDeleteButton(rowId)}</td>
-                      </tr>`
+      $("#servicesTableBody").append(newRow);
 
-              $("#servicesTableBody").append(newRow)
+      // Show the success toast after 2 seconds
+      setTimeout(function () {
+        // Hide the spinner
+      $("#loadingOverlay").removeClass('show'); // Hide spinner overlay
 
-              // Show the success toast after modal has been hidden
-              $("#editModal").on("hidden.bs.modal", function () {
-                const toast = new bootstrap.Toast($("#successToast"))
-                $("#successToast").show()
-                toast.show() // Show success message toast
-              })
+        // Show the success toast
+        const toast = new bootstrap.Toast($("#successToast"));
+        $("#successToast").show();
+        toast.show(); // Show success message toast
+      }, 2000); // 2000 ms = 2 seconds
 
-              // Hide modal
-              $("#editModal").modal("hide")
-            },
-            error: function () {
-              // Handle error
-            },
-            complete: function () {
-              // Hide spinner
-              $("#loadingSpinner").hide()
-            },
-          })
-        })
+      // Hide the modal
+      $("#editModal").modal("hide");
+    },
+    error: function () {
+      // Error handling (if necessary)
+      alert("An error occurred while processing your request.");
+      $("#loadingOverlay").hide(); // Hide spinner in case of an error
+    },
+  });
+});
 
         // Show delete toast and remove row on delete action
         $(".delete-form").on("submit", function (event) {
