@@ -7,8 +7,9 @@ const router = express.Router()
 
 // Protected routes that require authentication and admin privileges
 router.get("/schemesList", isSignedIn, isAdmin, schemesRouter.showSchemesList)
-router.get("/dashBoard",isSignedIn, schemesRouter.dashBoard)
-router.get("/allSchemes",isSignedIn, schemesRouter.index)
+router.get("/dashBoard", isSignedIn, schemesRouter.dashBoard)
+router.get("/allSchemes", isSignedIn, schemesRouter.index)
+router.get("/dataTable", isSignedIn, schemesRouter.index2)
 router.get("/new", isSignedIn, schemesRouter.newScheme)
 router.get("/:schemeId", isSignedIn, schemesRouter.getById) // Assuming the getById handler checks if user is signed in
 router.post("/create", isSignedIn, schemesRouter.createSchemeFunc)

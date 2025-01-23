@@ -9,6 +9,15 @@ const index = async (req, res) => {
     res.redirect("/") // Redirect to a homepage or an error page
   }
 }
+const index2 = async (req, res) => {
+  try {
+    const populatedSchemes = await Scheme.find()
+    res.render("schemes/dataTable", { populatedSchemes })
+  } catch (err) {
+    console.error(err)
+    res.redirect("/") // Redirect to a homepage or an error page
+  }
+}
 
 const newScheme = (req, res) => {
   res.render("schemes/new.ejs")
@@ -111,6 +120,7 @@ export default {
   showSchemesList,
   dashBoard,
   index,
+  index2,
   getById,
   deleteScheme,
   updateScheme,
