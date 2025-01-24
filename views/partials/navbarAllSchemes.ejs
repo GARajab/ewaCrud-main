@@ -1,0 +1,35 @@
+<div class="header">
+  <div class="logo">
+    <img
+      src="https://www.ewa.bh/en/HeaderImages/EWALogo.png"
+      alt="Logo"
+      style="width: 350px; height: auto"
+    />
+  </div>
+  <h1>Main Records Web Version 1.0</h1>
+  <div class="actions">
+    <a href="/auth/sign-out" class="btn btn-primary">Sign Out</a>
+    <a href="/schemes/new" class="btn btn-primary">Add New Scheme</a>
+  </div>
+</div>
+
+<style>
+  .header {
+    display: flex; /* Use Flexbox for layout */
+    justify-content: space-between; /* Space items in the header */
+    align-items: center; /* Center items vertically */
+    padding: 10px; /* Add some padding for aesthetics */
+    width: 100%;
+    margin: 0px;
+  }
+
+  .logo {
+    flex: 0 0 auto; /* Prevent logo from growing or shrinking */
+  }
+
+  .actions {
+    display: flex; /* Use Flexbox for actions */
+    gap: 10px; /* Space between buttons */
+    flex: 0 0 auto; /* Prevent actions from growing or shrinking */
+  }
+</style>
