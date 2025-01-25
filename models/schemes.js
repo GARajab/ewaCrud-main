@@ -17,6 +17,18 @@ const schemeSchema = new mongoose.Schema({
   CONTRACTORAPPRAISAL: { type: Number, require: true },
   AREA: { type: String, require: true },
   TYPE: { type: String, require: true },
+  contractorRemarks: { type: String },
+  Rcvd_Date: { type: Date, require: true },
+  APPNUMBER: { type: String, require: true },
+  NUMBEROFSS: { type: String, require: true },
+  REMARKS: { type: String, require: true },
+  AREA: { type: String, require: true },
+  labCost: { type: Number, require: true },
+  matCost: { type: Number, require: true },
+  PO_NUMBER: { type: Number, require: true },
+  IO: { type: Number, require: true },
+  totalCost: { type: Number, require: true },
+  IUWR_NUMBER: { type: String, require: true },
 })
 
 const Scheme = mongoose.model("Scheme", schemeSchema)
