@@ -242,7 +242,7 @@
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                     <li>
-                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= populatedScheme.id %>" data-scheme-ref="<%= populatedScheme["Sch_Ref"] %>" data-job-number="<%= populatedScheme["Job_no"] %>" data-block="<%= populatedScheme.BLK %>" data-supervisor="<%= populatedScheme.SUPERVISOR %>" data-contractor-name="<%= populatedScheme["Contractor_Name"] %>" data-title="<%= populatedScheme.Title1 %>" data-status="<%= populatedScheme.STATUS %>" data-percentage="<%= populatedScheme.PERCENTAGE %>" data-date-complete="<%= populatedScheme.DATE_OF_COMPLETED %>" data-app-status="<%= populatedScheme.APPSTATUS %>" data-date-measurement="<%= populatedScheme.DATEOFMEASUREMENT %>">
+                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= populatedScheme.id %>" data-scheme-ref="<%= populatedScheme["Sch_Ref"] %>" data-job-number="<%= populatedScheme["Job_no"] %>" data-block="<%= populatedScheme.BLK %>" data-supervisor="<%= populatedScheme.SUPERVISOR %>" data-contractor-name="<%= populatedScheme["Contractor_Name"] %>" data-title="<%= populatedScheme.Title1 %>" data-status="<%= populatedScheme.STATUS %>" data-percentage="<%= populatedScheme.PERCENTAGE %>" data-date-completed="<%= populatedScheme.DATE_OF_COMPLETED %>" data-app-status="<%= populatedScheme.APPSTATUS %>" data-date-measurement="<%= populatedScheme.DATEOFMEASUREMENT %>">
                                             <i class="fas fa-edit" style="color: green"></i> Edit
                                         </button>
                                     </li>
@@ -354,47 +354,63 @@
 
 
 <script>
-    $(document).ready(function () {
-        const table = $("#example").DataTable({
-           pagingType: "full", // Options: full, simple, simple_numbers, numbers
-        lengthChange: true,    // Allow user to change number of items per page
-        pageLength: 10,        // Default number of items per page
-            dom: "lBfrtip",
-            buttons: [
-                { extend: "copy", className: "btn btn-primary", text: "Copy" },
-                { extend: "excel", className: "btn btn-success", text: "Export to Excel" },
-                { extend: "pdfHtml5", className: "btn btn-danger", text: "Export to PDF",orientation: 'landscape', pageSize: 'A4', exportOptions: {
-                    modifier: {
-                        page: 'all',
-                        columns: ':lt(11)'
-                    }
-                },
-              customize: function(doc) {
-                    // Adjust column widths to fit the PDF page
-                    const columns = doc.content[1].table.body[0].length;    
-                    // Set margins on the PDF
-                    doc.pageMargins = [10, 10, 10, 10]; // Set margins: [left, top, right, bottom]
+$(document).ready(function () {
+    const table = $("#example").DataTable({
+        pagingType: "full",
+        lengthChange: true,
+        pageLength: 10,
+        dom: "lBfrtip",
+        buttons: [
+            { extend: "copy", className: "btn btn-primary", text: "Copy" },
+            { extend: "excel", className: "btn btn-success", text: "Export to Excel" },
+            { extend: "pdfHtml5", className: "btn btn-danger", text: "Export to PDF", orientation: 'landscape', pageSize: 'A4', exportOptions: {
+                modifier: {
+                    page: 'all',
+                    columns: ':lt(11)'
+                }
+            },
+            customize: function(doc) {
+                doc.pageMargins = [10, 10, 10, 10];
+            }
+            }
+        ],
+        columnDefs: [
+            {
+                targets: [9, 11], // target the indices of the date columns
+                render: function (data) {
+                    return formatDate(data); // use the same formatDate function
                 }
             }
         ]
     });
+
 });
-        $("#servicesTableBody").on("click", ".edit-button", function () {
-            let $this = $(this);
-            $("#schemeId").val($this.data("id"));
-            $("#Sch_Ref").val($this.data("scheme-ref"));
-            $("#Job_no").val($this.data("job-number"));
-            $("#BLK").val($this.data("block"));
-            $("#SUPERVISOR").val($this.data("supervisor"));
-            $("#ContractorName").val($this.data("contractor-name"));
-            $("#Title1").val($this.data("title"));
-            $("#STATUS").val($this.data("status"));
-            $("#PERCENTAGE").val($this.data("percentage"));
-            $("#DATE_OF_COMPLETED").val($this.data("date-completed"));
-            $("#APPSTATUS").val($this.data("app-status"));
-            $("#DATEOFMEASUREMENT").val($this.data("date-measurement"));
-            $("#editForm").attr("action", "/schemes/update/" + $this.data("id") + "?_method=PUT");
-        });
+       function formatDate(date) {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
+
+// Within the edit button click handler
+$("#servicesTableBody").on("click", ".edit-button", function () {
+    let $this = $(this);
+    $("#schemeId").val($this.data("id"));
+    $("#Sch_Ref").val($this.data("scheme-ref"));
+    $("#Job_no").val($this.data("job-number"));
+    $("#BLK").val($this.data("block"));
+    $("#SUPERVISOR").val($this.data("supervisor"));
+    $("#ContractorName").val($this.data("contractor-name"));
+    $("#Title1").val($this.data("title"));
+    $("#STATUS").val($this.data("status"));
+    $("#PERCENTAGE").val($this.data("percentage"));
+    $("#DATE_OF_COMPLETED").val(formatDate($this.data("date-completed"))); // format date here
+    $("#APPSTATUS").val($this.data("app-status"));
+    $("#DATEOFMEASUREMENT").val(formatDate($this.data("date-measurement"))); // format date here
+    $("#editForm").attr("action", "/schemes/update/" + $this.data("id") + "?_method=PUT");
+});
 
         $("#editForm").on("submit", function (event) {
             event.preventDefault();

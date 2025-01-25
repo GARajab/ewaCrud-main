@@ -26,7 +26,6 @@ const schemeSchema = new mongoose.Schema({
   labCost: { type: Number, require: true },
   matCost: { type: Number, require: true },
   PO_NUMBER: { type: Number, require: true },
-  IO: { type: Number, require: true },
   totalCost: { type: Number, require: true },
   IUWR_NUMBER: { type: String, require: true },
 })
