@@ -218,50 +218,63 @@
                 <th>Date of Measurement</th>
                 <th>Action</th>
             </tr>
-  
-        <tbody id="servicesTableBody">
-            <% if(populatedSchemes.length > 0) { %>
-                <% populatedSchemes.forEach((populatedScheme, index) => { %>
-                    <tr data-id="<%= populatedScheme.id %>">
-                        <th scope="row"><%= index + 1 %></th>
-                        <td><%= populatedScheme.Sch_Ref %></td>
-                        <td><%= populatedScheme.Job_no %></td>
-                        <td><%= populatedScheme.BLK %></td>
-                        <td><%= populatedScheme.SUPERVISOR %></td>
-                        <td><%= populatedScheme.Contractor_Name %></td>
-                        <td><%= populatedScheme.Title1 %></td>
-                        <td><%= populatedScheme.STATUS %></td>
-                        <td><%= populatedScheme.PERCENTAGE %></td>
-                       <td><%= populatedScheme.DATE_OF_COMPLETED %></td>
-                        <td><%= populatedScheme.APPSTATUS %></td>
-                        <td><%= populatedScheme.DATEOFMEASUREMENT %></td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-secondary bg-transparent" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: black; border: none;">
-                                    <i class="fas fa-ellipsis-v"></i>
+    <% 
+function formatDate(dateString) { 
+    const date = new Date(dateString); 
+    if (isNaN(date.getTime())) { // Check if it's a valid date
+        console.error(`Invalid date: ${dateString}`);
+        return 'Invalid Date'; // return a default value or message for invalid dates
+    }
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}/${day}/${year}`;
+} 
+%>
+
+<tbody id="servicesTableBody">
+    <% if(populatedSchemes.length > 0) { %>
+        <% populatedSchemes.forEach((populatedScheme, index) => { %>
+            <tr data-id="<%= populatedScheme.id %>">
+                <th scope="row"><%= index + 1 %></th>
+                <td><%= populatedScheme.Sch_Ref %></td>
+                <td><%= populatedScheme.Job_no %></td>
+                <td><%= populatedScheme.BLK %></td>
+                <td><%= populatedScheme.SUPERVISOR %></td>
+                <td><%= populatedScheme.Contractor_Name %></td>
+                <td><%= populatedScheme.Title1 %></td>
+                <td><%= populatedScheme.STATUS %></td>
+                <td><%= populatedScheme.PERCENTAGE %></td>
+                <td><%= formatDate(populatedScheme.DATE_OF_COMPLETED) %></td>
+                <td><%= populatedScheme.APPSTATUS %></td>
+                <td><%= formatDate(populatedScheme.DATEOFMEASUREMENT) %></td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary bg-transparent" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="color: black; border: none;">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li>
+                                <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= populatedScheme.id %>" data-scheme-ref="<%= populatedScheme["Sch_Ref"] %>" data-job-number="<%= populatedScheme["Job_no"] %>" data-block="<%= populatedScheme.BLK %>" data-supervisor="<%= populatedScheme.SUPERVISOR %>" data-contractor-name="<%= populatedScheme["Contractor_Name"] %>" data-title="<%= populatedScheme.Title1 %>" data-status="<%= populatedScheme.STATUS %>" data-percentage="<%= populatedScheme.PERCENTAGE %>" data-date-completed="<%= formatDate(populatedScheme.DATE_OF_COMPLETED) %>" data-app-status="<%= populatedScheme.APPSTATUS %>" data-date-measurement="<%= formatDate(populatedScheme.DATEOFMEASUREMENT) %>">
+                                    <i class="fas fa-edit" style="color: green"></i> Edit
                                 </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li>
-                                        <button class="dropdown-item edit-button" data-bs-toggle="modal" data-bs-target="#editModal" data-id="<%= populatedScheme.id %>" data-scheme-ref="<%= populatedScheme["Sch_Ref"] %>" data-job-number="<%= populatedScheme["Job_no"] %>" data-block="<%= populatedScheme.BLK %>" data-supervisor="<%= populatedScheme.SUPERVISOR %>" data-contractor-name="<%= populatedScheme["Contractor_Name"] %>" data-title="<%= populatedScheme.Title1 %>" data-status="<%= populatedScheme.STATUS %>" data-percentage="<%= populatedScheme.PERCENTAGE %>" data-date-complete="<%= populatedScheme.DATE_OF_COMPLETED %>" data-app-status="<%= populatedScheme.APPSTATUS %>" data-date-measurement="<%= populatedScheme.DATEOFMEASUREMENT %>">
-                                            <i class="fas fa-edit" style="color: green"></i> Edit
+                            </li>
+                            <li>
+                                <% if(user.cpr == "Admin") { %>
+                                    <form action="/schemes/delete/<%= populatedScheme.id %>?_method=DELETE" method="POST" style="display: inline">
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-trash" style="color: red"></i> Delete
                                         </button>
-                                    </li>
-                                    <li>
-                                        <% if(user.cpr == "Admin") { %>
-                                            <form action="/schemes/delete/<%= populatedScheme.id %>?_method=DELETE" method="POST" style="display: inline">
-                                                <button type="submit" class="dropdown-item">
-                                                    <i class="fas fa-trash" style="color: red"></i> Delete
-                                                </button>
-                                            </form>
-                                        <% } %>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                <% }); %>
-            <% } %>
-        </tbody>
+                                    </form>
+                                <% } %>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        <% }); %>
+    <% } %>
+</tbody>
     </table>
 </div>
 
