@@ -3,7 +3,7 @@ import Scheme from "../models/schemes.js"
 const index = async (req, res) => {
   try {
     const populatedSchemes = await Scheme.find()
-     const user = req.session.user
+    const user = req.session.user
     res.render("schemes/allSchemes", { populatedSchemes, user })
   } catch (err) {
     console.error(err)
@@ -14,7 +14,7 @@ const index2 = async (req, res) => {
   try {
     const populatedSchemes = await Scheme.find()
     const user = req.session.user // Get the user from the session
-    res.render("schemes/dataTable", { populatedSchemes ,user})
+    res.render("schemes/dataTable", { populatedSchemes, user })
   } catch (err) {
     console.error(err)
     res.redirect("/") // Redirect to a homepage or an error page

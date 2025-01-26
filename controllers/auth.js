@@ -43,6 +43,33 @@ const signup_post = async (req, res) => {
     return res.redirect("/auth/sign-up")
   }
 }
+const updateEmail = async (req, res) => {
+  const userInDatabase = await User.findOne({ cpr: req.body.cpr })
+  if (userInDatabase) {
+    // return res.send("CPR already in database")
+    req.session.messages = `User Already In Database`
+    return res.redirect("/auth/sign-up")
+  }
+  if (req.body.password !== req.body.confirmPassword) {
+    req.session.messages = "Passwords Do No Matching."
+    return res.redirect("/auth/sign-up")
+  }
+  try {
+    const hashedPassword = hashSync(req.body.password, 10)
+    req.body.password = hashedPassword
+    const cpr = await User.create(req.body)
+    req.session.messages = `Thank You ${req.body.cpr} Now You Can Sign In`
+    res.redirect("/auth/sign-in")
+  } catch (err) {
+    console.log(err)
+    return res.send("Failed To Create User.")
+
+    // console.log(err)
+    req.session.messages =
+      "Failed To Create User. Please Try Again Or Call The Admin On 17991236."
+    return res.redirect("/auth/sign-up")
+  }
+}
 
 const signin_get = (req, res) => {
   res.render("auth/sign-in.ejs")

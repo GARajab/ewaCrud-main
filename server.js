@@ -1,7 +1,6 @@
 import { config } from "dotenv"
 config()
 import express from "express"
-const app = express()
 import session from "express-session"
 import { connect } from "mongoose"
 import methodOverRide from "method-override"
@@ -12,10 +11,33 @@ import schemeRouter from "./routes/schemes.js"
 import getMessages from "./middleware/display-message.js"
 import bodyParser from "body-parser"
 
+const app = express()
 const port = process.env.PORT || 3000
 
+// Middleware Setup
 app.use(bodyParser.json())
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(methodOverRide("_method"))
+app.use(morgan("dev"))
 
+// Session Management
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }, // Set to true if using HTTPS
+  })
+)
+
+app.use(getMessages)
+app.use(passUserToView)
+
+// Set View Engine
+app.set("view engine", "ejs")
+
+// Connect to MongoDB
 const connectDB = async () => {
   try {
     await connect(process.env.MONGODB_URI)
@@ -29,27 +51,26 @@ const connectDB = async () => {
 
 connectDB()
 
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(methodOverRide("_method"))
-app.use(morgan("dev"))
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-  })
-)
+// Routes
 app.use("/auth", authRouter)
 app.use("/schemes", schemeRouter)
-app.set("view engine", "ejs")
-app.use(getMessages)
-app.use(passUserToView)
 
+// Render the home page or sign-in page
 app.get("/", (req, res) => {
-  res.render("auth/sign-in.ejs")
+  res.render("auth/sign-in.ejs") // Render sign-in page
 })
 
+// Dashboard route
+app.get("/schemes/dashboard", (req, res) => {
+  const user = req.session.username || "Guest" // Get the username from session, default to 'Guest'
+  res.render("schemes/dashboard", { user }) // Pass username to the view
+})
+// app.get("/schemes/allSchemes", (req, res) => {
+//   const user = req.session.username || "Guest" // Get the username from session, default to 'Guest'
+//   res.render("schemes/allSchemes", { user }) // Pass username to the view
+// })
+
+// Handle adding a new scheme functionality
 app.post("/api/schemes", async (req, res) => {
   const { start, length, search } = req.body
 
@@ -85,6 +106,7 @@ app.post("/api/schemes", async (req, res) => {
   })
 })
 
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`)
 })

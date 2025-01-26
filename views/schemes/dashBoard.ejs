@@ -1,124 +1,240 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dashboard</title>
     <%- include('../partials/header.ejs') %>
+
+    <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
       href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
-    <script src="//code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="//cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.min.css"
+    />
+
     <style>
       body {
-        background-color: #eee;
+        background-color: #f8f9fa;
+        font-family: "Arial", sans-serif;
+      }
+      .breadcrumb {
+        background-color: transparent;
+        margin-bottom: 20px;
+      }
+      .profile-card {
+        background: linear-gradient(135deg, #6a82fb 0%, #fc5c7d 100%);
+        color: white;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      }
+      .user-info {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+      .scheme-btn {
+        padding: 10px 15px;
+        margin: 5px;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+      }
+      .scheme-btn:hover {
+        background-color: #0056b3;
+      }
+      #spinner {
+        display: none; /* Hidden by default */
       }
     </style>
   </head>
   <body onload="pushNotify()">
-    <section class="py-5">
+    <!-- Header Section -->
+    <header class="py-3">
       <div class="container">
-        <div class="row">
-          <div class="col">
-            <nav
-              aria-label="breadcrumb"
-              class="bg-body-tertiary rounded-3 p-3 mb-4"
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb mb-0">
+            <li
+              class="breadcrumb-item active"
+              aria-current="page"
+              style="margin: auto; color: black; font-size: 30px"
             >
-              <ol class="breadcrumb mb-0">
-                <li
-                  class="breadcrumb-item mx-auto fs-1 active"
-                  aria-current="page"
-                >
-                  <%= user.cpr %> Dashboard
-                </li>
-              </ol>
-              <a
-                href="/auth/sign-out"
-                class="btn btn-danger"
-                onclick="clearLoginNotification()"
-                >Sign Out</a
-              >
-            </nav>
+              <%= user.cpr %> Dashboard
+            </li>
+          </ol>
+        </nav>
+        <div style="display: flex; justify-content: end">
+          <a
+            href="/auth/sign-out"
+            class="btn btn-danger"
+            onclick="clearLoginNotification()"
+            style="width: fit-content"
+            >Sign Out</a
+          >
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container py-5">
+      <div class="row">
+        <!-- Profile Card -->
+        <div class="col-lg-4" style="display: flex">
+          <div
+            class="card profile-card"
+            style="height: 95%; align-items: center; width: 100%"
+          >
+            <img
+              src="https://www.ewa.bh/en/HeaderImages/EWALogo.png"
+              alt="avatar"
+              class="img-fluid"
+              style="width: 100%; margin: 70px 0px 50px 0px"
+            />
+            <h5 class="my-3"><%= user.cpr %></h5>
           </div>
         </div>
 
-        <div class="row align-items-center">
-          <div class="col-lg-4">
-            <div class="card mb-4">
-              <div class="card-body text-center">
-                <img
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                  alt="avatar"
-                  class="rounded-circle img-fluid"
-                  style="width: 150px"
-                />
-                <h5 class="my-3"><%= user.cpr %></h5>
-              </div>
-            </div>
+        <!-- User Info and Actions -->
+        <div class="col-lg-8">
+          <div class="user-info">
+            <h4>User Information</h4>
+            <p><strong>Full Name:</strong> <%= user.cpr %></p>
+            <p><strong>Email:</strong> <%= user.email %></p>
+            <button
+              class="btn scheme-btn btn-primary"
+              id="editEmailBtn"
+              style="color: white"
+            >
+              Edit Email
+            </button>
           </div>
-          <div class="col-lg-8">
-            <div class="card mb-4">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">Full Name</p>
-                  </div>
-                  <div class="col-sm-9">
-                    <p class="text-muted mb-0"><%= user.cpr %></p>
-                  </div>
-                </div>
-                <hr />
-                <div class="row">
-                  <div class="col-sm-3">
-                    <p class="mb-0">Email</p>
-                  </div>
-                  <div class="col-sm-9">
-                    <p class="text-muted mb-0"><%= user.email %></p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="row">
-              <div class="col-md-4">
-                <div class="card mb-4 mb-md-0 text-center">
-                  <div class="card-body">
-                    <p class="mb-4">
-                      <span class="text-primary font-italic me-1">
-                        <a href="/schemes/allSchemes" class="btn btn-primary"
-                          >All Schemes</a
-                        >
-                      </span>
-                      <a href="/schemes/new" class="btn btn-primary"
-                        >New Scheme</a
-                      >
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <!-- User Scheme Management -->
+          <div class="user-info">
+            <h4>Manage Schemes</h4>
+            <button
+              id="redirect-button"
+              onclick="showSpinner(); redirect();"
+              class="btn btn-primary"
+            >
+              <span
+                id="spinner"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              All Schemes
+            </button>
+
+            <script>
+              function showSpinner() {
+                // Show the spinner
+                const spinner = document.getElementById("spinner")
+                spinner.style.display = "inline-block" // Show spinner
+              }
+
+              function redirect() {
+                // Redirect the user
+
+                window.location.href = "/schemes/allSchemes"
+              }
+            </script>
+            <a href="/schemes/new" class="btn scheme-btn btn-primary"
+              >New Scheme</a
+            >
           </div>
         </div>
       </div>
-    </section>
+    </main>
+
+    <!-- Edit Email Modal -->
+    <div
+      class="modal fade"
+      id="emailModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="emailModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="emailModalLabel">Edit Email</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="emailForm">
+              <div class="form-group">
+                <label for="cpr">CPR:</label>
+                <input type="text" id="cpr" class="form-control" disabled />
+              </div>
+              <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" class="form-control" required />
+              </div>
+              <div class="form-group">
+                <label for="verifyEmail">Verify Email:</label>
+                <input
+                  type="email"
+                  id="verifyEmail"
+                  class="form-control"
+                  required
+                />
+              </div>
+              <button type="submit" id="saveEmailBtn" class="btn btn-primary">
+                Update
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Toast Notification -->
-    <script
-      type="text/javascript"
-      src="https://cdn.jsdelivr.net/npm/toastify-js"
-    ></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.js"></script>
+
     <script>
-      const showMessage = "<%= messages %>"
-      if (showMessage) {
-        Toastify({
-          text: showMessage,
-          className: "success",
-          style: {
-            background: "#28a745", // Green color for success message
-            color: "white",
-          },
-        }).showToast()
+      // Open the modal to edit the email
+      document.getElementById("editEmailBtn").onclick = function () {
+        $("#emailModal").modal("show")
+        fetch("/userDetails") // Fetch user details
+          .then((response) => response.json())
+          .then((data) => {
+            document.getElementById("email").value = data.email
+            document.getElementById("cpr").value = data.cpr // This will be disabled
+          })
+      }
+
+      // Save the new email
+      document.getElementById("emailForm").onsubmit = function (event) {
+        event.preventDefault() // Prevent form submission
+        const newEmail = document.getElementById("email").value
+        const verifyEmail = document.getElementById("verifyEmail").value
+
+        if (newEmail !== verifyEmail) {
+          alert("Emails do not match!")
+          return
+        }
       }
     </script>
   </body>

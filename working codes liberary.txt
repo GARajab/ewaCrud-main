@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .scheme-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .scheme-btn:hover {
+        background-color: #f2f2f2;
+      }
+
+      .scheme-btn:active {
+        transform: scale(0.9);
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Email Editor</h1>
+    <p>
+      <strong>Email:</strong>
+      <span id="emailDisplay"><%= user.email %></span>
+      <input
+        type="text"
+        id="emailInput"
+        value="<%= user.email %>"
+        style="display: none"
+      />
+    </p>
+    <button
+      class="btn scheme-btn btn-primary"
+      style="color: white"
+      id="editEmailBtn"
+    >
+      Edit Email
+    </button>
+
+    <script>
+      const editEmailBtn = document.getElementById("editEmailBtn")
+      const emailDisplay = document.getElementById("emailDisplay")
+      const emailInput = document.getElementById("emailInput")
+
+      // Function to validate email using regular expression
+      function isValidEmail(email) {
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+        return regex.test(email)
+      }
+
+      editEmailBtn.addEventListener("click", function () {
+        if (emailInput.style.display === "none") {
+          // Switch to input mode
+          emailDisplay.style.display = "none"
+          emailInput.style.display = "inline"
+          emailInput.focus() // Focus on the input
+        } else {
+          // Validate the email address
+          const newEmail = emailInput.value.trim()
+          if (!isValidEmail(newEmail)) {
+            alert("Invalid email address")
+            return
+          }
+          // Update the email address and switch back to display mode
+          emailDisplay.innerText = newEmail // Update displayed email
+          emailDisplay.style.display = "inline"
+          emailInput.style.display = "none" // Hide input field
+
+          // Send AJAX request to update the email on the server
+        }
+      })
+      // Function to update the email on the server using AJAX
+    </script>
+  </body>
+</html>
