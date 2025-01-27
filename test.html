@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Loading Spinner Example</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <style>
+    body,
+    html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(128, 128, 128, 0.8); /* Gray background */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999; /* Ensure it's on top */
+    }
+
+    .spinner {
+      border: 8px solid rgba(255, 255, 255, 0.3); /* Light background */
+      border-top: 8px solid #fff; /* Spinner color */
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <script>
+    // Function to show the overlay
+    function showOverlay() {
+      document.getElementById("overlay").style.display = "flex"
+    }
+
+    // Function to hide the overlay
+    function hideOverlay() {
+      document.getElementById("overlay").style.display = "none"
+    }
+
+    // Show the overlay when the page starts loading
+    window.onload = function () {
+      showOverlay()
+    }
+
+    // Hide the overlay once the page is fully loaded
+    window.addEventListener("load", function () {
+      hideOverlay()
+    })
+  </script>
+  <body>
+    <div class="overlay" id="overlay">
+      <div class="spinner"></div>
+    </div>
+
+    <div>
+      <h1>Welcome to My Page!</h1>
+      <p>This is a simple example of a loading spinner.</p>
+      <!-- Add more content as needed -->
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

@@ -56,6 +56,9 @@
       #spinner {
         display: none; /* Hidden by default */
       }
+      #spinnerNew {
+        display: none; /* Hidden by default */
+      }
     </style>
   </head>
   <body onload="pushNotify()">
@@ -135,24 +138,44 @@
               ></span>
               All Schemes
             </button>
-
-            <script>
-              function showSpinner() {
-                // Show the spinner
-                const spinner = document.getElementById("spinner")
-                spinner.style.display = "inline-block" // Show spinner
-              }
-
-              function redirect() {
-                // Redirect the user
-
-                window.location.href = "/schemes/allSchemes"
-              }
-            </script>
-            <a href="/schemes/new" class="btn scheme-btn btn-primary"
-              >New Scheme</a
+            <button
+              id="redirect-buttonNew"
+              onclick="showSpinnerNew(); redirectNew();"
+              class="btn btn-primary"
             >
+              <span
+                id="spinnerNew"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              New Schemes
+            </button>
           </div>
+          <script>
+            function showSpinner() {
+              // Show the spinner
+              const spinner = document.getElementById("spinner")
+              spinner.style.display = "inline-block" // Show spinner
+            }
+
+            function redirect() {
+              // Redirect the user
+
+              window.location.href = "/schemes/allSchemes"
+            }
+            function showSpinnerNew() {
+              // Show the spinner
+              const spinnerNew = document.getElementById("spinnerNew")
+              spinnerNew.style.display = "inline-block" // Show spinner
+            }
+
+            function redirectNew() {
+              // Redirect the user
+
+              window.location.href = "/schemes/new"
+            }
+          </script>
         </div>
       </div>
     </main>
