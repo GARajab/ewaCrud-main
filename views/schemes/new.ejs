@@ -17,68 +17,82 @@
 
     <style>
       body {
-        margin: 30px;
+        margin: 0; /* Reset the default margin */
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Ensure the body takes full height */
         font-family: Arial, sans-serif;
       }
       h1 {
         margin-bottom: 20px;
       }
       /* Overlay for loading spinner */
-      .spinner-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 2000;
+      #spinnerAdd {
+        display: none; /* Hidden by default */
       }
-      .spinner-overlay.show {
-        display: flex;
+      .content {
+        flex: 1; /* Make this container take up remaining space */
+        padding: 30px; /* Add padding */
+      }
+      footer {
+        background-color: #343a40; /* Dark background color */
+        color: white; /* White text color */
+        text-align: center; /* Center align text */
+        padding: 10px 0; /* Padding for footer */
       }
     </style>
   </head>
   <body>
-    <nav>
-      <div class="container">
-        <div class="navbar">
-          <h1 id="nav-header">EWA "Rajab"</h1>
-          <div class="nav-links">
-            <a
-              href="/auth/sign-out"
-              class="btn btn-primary"
-              onclick="clearLoginNotification()"
-              >Sign Out</a
-            >
-            <a
-              href="/schemes/dashBoard"
-              class="btn btn-primary"
-              onclick="clearLoginNotification()"
-              >Home</a
-            >
-            <a
-              href="/schemes/allSchemes"
-              class="btn btn-primary"
-              onclick="clearLoginNotification()"
-              >All Schemes</a
-            >
-          </div>
+    <!-- Toast container for notifications -->
+    <div class="toast-container">
+      <div
+        id="successToast"
+        class="toast container-fluid full-height justify-content-center align-items-center text-white bg-success"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        style="display: none"
+      >
+        <div class="d-flex">
+          <div class="toast-body">Scheme added successfully!</div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
         </div>
       </div>
-    </nav>
+      <div
+        id="errorToast"
+        class="toast container-fluid full-height justify-content-center align-items-center text-white bg-danger"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+        style="display: none"
+      >
+        <div class="d-flex">
+          <div class="toast-body">
+            An error occurred while adding the scheme!
+          </div>
+          <button
+            type="button"
+            class="btn-close btn-close-white me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
 
-    <div class="container" style="margin-top: -80px">
-      <h1 style="display: flex; justify-content: center; margin-top: 150px">
-        Add New Scheme
-      </h1>
+    <%- include('../partials/navbarAllSchemes.ejs') %>
+
+    <div class="content container">
+      <h1 style="text-align: center; margin-top: 50px">Add New Scheme</h1>
       <div class="row">
         <div class="col-md-5 mx-auto">
           <div id="first">
             <form action="/schemes/create" method="POST" name="addNewService">
-              <!-- this is the localhost:3000 path without any thing will transfer you to the form action -->
               <br />
               <div>
                 <label for="Sch_Ref">Reference Number</label>
@@ -177,134 +191,92 @@
                   id="DATE_OF_COMPLETE"
                   placeholder="Enter The DATE OF COMPLETE"
                 />
-                <br />
-                <div class="form-group">
-                  <label for="NUMBEROFSS">NUMBER OF Substations</label>
-                  <input
-                    type="text"
-                    name="NUMBEROFSS"
-                    class="form-control"
-                    id="NUMBEROFSS"
-                    placeholder="Enter The Number Of Substations"
-                  />
-                </div>
-                <br />
-                <div class="form-group">
-                  <label for="APPSTATUS">APP STATUS</label>
-                  <input
-                    type="text"
-                    name="APPSTATUS"
-                    class="form-control"
-                    id="APPSTATUS"
-                    placeholder="Enter The App Status"
-                  />
-                </div>
-                <br />
-                <div class="form-group">
-                  <label for="DATEOFMEASUREMENT">DATE OF MEASUREMENT</label>
-                  <input
-                    type="date"
-                    name="DATEOFMEASUREMENT"
-                    class="form-control"
-                    id="DATEOFMEASUREMENT"
-                    placeholder="Enter The Date Of Measurment"
-                  />
-                </div>
-                <br />
-                <div class="form-group">
-                  <label for="CONTRACTORAPPRAISAL">CONTRACTOR APPRAISAL</label>
-                  <input
-                    type="text"
-                    name="CONTRACTORAPPRAISAL"
-                    class="form-control"
-                    id="CONTRACTORAPPRAISAL"
-                    placeholder="Enter The Contractor Appraisal"
-                  />
-                </div>
-                <br />
-                <div class="form-group">
-                  <label for="AREA">AREA</label>
-                  <input
-                    type="text"
-                    name="AREA"
-                    class="form-control"
-                    id="AREA"
-                    placeholder="Enter The Area"
-                  />
-                </div>
-                <br />
-                <div class="form-group">
-                  <label for="TYPE">TYPE</label>
-                  <input
-                    type="text"
-                    name="TYPE"
-                    class="form-control"
-                    id="TYPE"
-                    placeholder="Enter The Type"
-                  />
-                </div>
-                <br />
-                <div class="col-md-14 text-center">
-                  <button
-                    type="submit"
-                    style="font-size: 25px"
-                    class="btn btn-block mybtn btn-primary tx-tfm"
-                  >
-                    Add
-                  </button>
-                </div>
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="NUMBEROFSS">NUMBER OF Substations</label>
+                <input
+                  type="text"
+                  name="NUMBEROFSS"
+                  class="form-control"
+                  id="NUMBEROFSS"
+                  placeholder="Enter The Number Of Substations"
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="APPSTATUS">APP STATUS</label>
+                <input
+                  type="text"
+                  name="APPSTATUS"
+                  class="form-control"
+                  id="APPSTATUS"
+                  placeholder="Enter The App Status"
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="DATEOFMEASUREMENT">DATE OF MEASUREMENT</label>
+                <input
+                  type="date"
+                  name="DATEOFMEASUREMENT"
+                  class="form-control"
+                  id="DATEOFMEASUREMENT"
+                  placeholder="Enter The Date Of Measurement"
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="CONTRACTORAPPRAISAL">CONTRACTOR APPRAISAL</label>
+                <input
+                  type="text"
+                  name="CONTRACTORAPPRAISAL"
+                  class="form-control"
+                  id="CONTRACTORAPPRAISAL"
+                  placeholder="Enter The Contractor Appraisal"
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="AREA">AREA</label>
+                <input
+                  type="text"
+                  name="AREA"
+                  class="form-control"
+                  id="AREA"
+                  placeholder="Enter The Area"
+                />
+              </div>
+              <br />
+              <div class="form-group">
+                <label for="TYPE">TYPE</label>
+                <input
+                  type="text"
+                  name="TYPE"
+                  class="form-control"
+                  id="TYPE"
+                  placeholder="Enter The Type"
+                />
+              </div>
+              <br />
+              <div class="col-md-14 text-center">
+                <button
+                  id="redirect-buttonAdd"
+                  onclick="showSpinnerAdd(); setTimeout(redirect,2000);"
+                  class="btn btn-primary"
+                  style="width: 100%"
+                >
+                  <span
+                    id="spinnerAdd"
+                    class="spinner-border spinner-border-sm"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  Add Scheme
+                </button>
               </div>
             </form>
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Overlay for loading spinner -->
-    <div class="spinner-overlay" id="loadingOverlay">
-      <div class="spinner-border text-light" role="status">
-        <span class="visually-hidden">Loading...</span>
-      </div>
-    </div>
-
-    <!-- Toast container for notifications -->
-    <div class="toast-container">
-      <div
-        id="successToast"
-        class="toast align-items-center text-white bg-success"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        style="display: none"
-      >
-        <div class="d-flex">
-          <div class="toast-body">Scheme added successfully!</div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
-        </div>
-      </div>
-      <div
-        id="errorToast"
-        class="toast align-items-center text-white bg-danger"
-        role="alert"
-        aria-live="assertive"
-        aria-atomic="true"
-        style="display: none"
-      >
-        <div class="d-flex">
-          <div class="toast-body">
-            An error occurred while adding the scheme!
-          </div>
-          <button
-            type="button"
-            class="btn-close btn-close-white me-2 m-auto"
-            data-bs-dismiss="toast"
-            aria-label="Close"
-          ></button>
         </div>
       </div>
     </div>
@@ -337,6 +309,19 @@
           })
         })
       })
+
+      function showSpinnerAdd() {
+        // Show the spinner
+        const spinnerAdd = document.getElementById("spinnerAdd")
+        spinnerAdd.style.display = "inline-block" // Show spinner
+      }
+
+      function redirect() {
+        // Redirect the user
+        window.location.href = "/schemes/allSchemes"
+      }
     </script>
+
+    <%- include('../partials/footer.ejs') %>
   </body>
 </html>

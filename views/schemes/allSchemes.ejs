@@ -214,6 +214,20 @@
  #butnsSpinner {
         display: none; /* Hidden by default */
       }
+      .table-container {
+    overflow-x: auto; /* Allows horizontal scrolling if the table exceeds the width */
+    width: 100%; /* Ensures the container takes full width */
+    margin: 0 auto; /* Centers the container */
+}
+
+table.dataTable {
+    width: 100% !important; /* Make sure DataTable takes full width */
+    table-layout: auto; /* Default layout, can be changed to fixed if specific width is needed */
+}
+
+th, td {
+    word-wrap: break-word; /* Allow words to break for better fitting */
+}
     </style>
  
 
@@ -246,19 +260,19 @@
   <table id="example" class="ui celled table" style="width:90%">
         <thead>
             <tr>
-                <th>#</th>
-                <th>Scheme Reference</th>
-                <th>Job Number</th>
-                <th>Block</th>
-                <th>Supervisor</th>
-                <th>Contractor Name</th>
-                <th>Title</th>
-                <th>Status</th>
-                <th>Percentage</th>
-                <th>Date of Completion</th>
-                <th>Application Status</th>
-                <th>Date of Measurement</th>
-                <th>Action</th>
+                <th></th>
+                <th><input type="text" placeholder="Search Scheme Ref" /></th>
+                <th><input type="text" placeholder="Search Job Number" /></th>
+                <th><input type="text" placeholder="Search Block" /></th>
+                <th><input type="text" placeholder="Search Supervisor" /></th>
+                <th><input type="text" placeholder="Search Contractor" /></th>
+                <th><input type="text" placeholder="Search Title" /></th>
+                <th><input type="text" placeholder="Search Status" /></th>
+                <th><input type="text" placeholder="Search Percentage" /></th>
+                <th><input type="text" placeholder="Search Date of Completion" /></th>
+                <th><input type="text" placeholder="Search Application Status" /></th>
+                <th><input type="text" placeholder="Search Date of Measurement" /></th>
+                <th></th>
             </tr>
     <% 
 function formatDate(dateString) { 
@@ -412,6 +426,7 @@ function formatDate(dateString) {
    
     $(document).ready(function () {
         const table = $("#example").DataTable({
+            deferRender: true,
            pagingType: "full", // Options: full, simple, simple_numbers, numbers
         lengthChange: true,    // Allow user to change number of items per page
         pageLength: 10,        // Default number of items per page
@@ -439,6 +454,15 @@ function formatDate(dateString) {
         ]
         
     });
+     // Apply the search functionality for each column
+        table.columns().every(function () {
+            const column = this;
+            $('input', this.header()).on('keyup change clear', function () {
+                if (column.search() !== this.value) {
+                    column.search(this.value).draw();
+                }
+            });
+        });
 });
         $("#servicesTableBody").on("click", ".edit-button", function () {
             let $this = $(this);
@@ -483,6 +507,7 @@ function formatDate(dateString) {
             });
         });
 </script>
+  <%- include('../partials/footer.ejs') %>
 </body>
 </html>
 

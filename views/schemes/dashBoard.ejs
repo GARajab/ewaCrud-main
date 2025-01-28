@@ -24,6 +24,9 @@
       body {
         background-color: #f8f9fa;
         font-family: "Arial", sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh; /* Ensure the body takes full height */
       }
       .breadcrumb {
         background-color: transparent;
@@ -56,8 +59,24 @@
       #spinner {
         display: none; /* Hidden by default */
       }
+
       #spinnerNew {
-        display: none; /* Hidden by default */
+        display: none;
+      }
+      #SpinnerAddingUsers {
+        display: none;
+      }
+     
+
+      footer {
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
       }
     </style>
   </head>
@@ -89,7 +108,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="container py-5">
+    <main class="container py-5" style="flex: 1">
       <div class="row">
         <!-- Profile Card -->
         <div class="col-lg-4" style="display: flex">
@@ -113,13 +132,6 @@
             <h4>User Information</h4>
             <p><strong>Full Name:</strong> <%= user.cpr %></p>
             <p><strong>Email:</strong> <%= user.email %></p>
-            <button
-              class="btn scheme-btn btn-primary"
-              id="editEmailBtn"
-              style="color: white"
-            >
-              Edit Email
-            </button>
           </div>
 
           <!-- User Scheme Management -->
@@ -127,7 +139,7 @@
             <h4>Manage Schemes</h4>
             <button
               id="redirect-button"
-              onclick="showSpinner(); redirect();"
+              onclick="showSpinner(); setTimeout(redirect,2000);"
               class="btn btn-primary"
             >
               <span
@@ -140,7 +152,7 @@
             </button>
             <button
               id="redirect-buttonNew"
-              onclick="showSpinnerNew(); redirectNew();"
+              onclick="showSpinnerNew(); setTimeout(redirectNewScheme,2000) ;"
               class="btn btn-primary"
             >
               <span
@@ -151,80 +163,49 @@
               ></span>
               New Schemes
             </button>
+            <button
+              id="add-user"
+              onclick="showSpinnerAddUser(); setTimeout(redirectAddUsers,2000) ;"
+              class="btn btn-primary"
+            >
+              <span
+                id="SpinnerAddingUsers"
+                class="spinner-border spinner-border-sm"
+                role="status"
+                aria-hidden="true"
+              ></span>
+              Add User
+            </button>
           </div>
           <script>
             function showSpinner() {
-              // Show the spinner
               const spinner = document.getElementById("spinner")
               spinner.style.display = "inline-block" // Show spinner
             }
 
             function redirect() {
-              // Redirect the user
-
               window.location.href = "/schemes/allSchemes"
             }
+
             function showSpinnerNew() {
-              // Show the spinner
               const spinnerNew = document.getElementById("spinnerNew")
               spinnerNew.style.display = "inline-block" // Show spinner
             }
-
-            function redirectNew() {
-              // Redirect the user
-
-              window.location.href = "/schemes/new"
+              function redirectNewScheme(){
+                window.location.href = "/schemes/new"
+              }
+                
+              function showSpinnerAddUser() {
+              const spinnerAddUser = document.getElementById("SpinnerAddingUsers")
+              spinnerAddUser.style.display = "inline-block" //}
             }
-          </script>
+              function redirectAddUsers() {
+                window.location.href = "/auth/sign-up"
+              }
+              </script>
         </div>
       </div>
     </main>
-
-    <!-- Edit Email Modal -->
-    <div
-      class="modal fade"
-      id="emailModal"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="emailModalLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="emailModalLabel">Edit Email</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <form id="emailForm">
-              <div class="form-group">
-                <label for="cpr">CPR:</label>
-                <input type="text" id="cpr" class="form-control" disabled />
-              </div>
-              <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" class="form-control" required />
-              </div>
-              <div class="form-group">
-                <label for="verifyEmail">Verify Email:</label>
-                <input
-                  type="email"
-                  id="verifyEmail"
-                  class="form-control"
-                  required
-                />
-              </div>
-              <button type="submit" id="saveEmailBtn" class="btn btn-primary">
-                Update
-              </button>
-            </form>
           </div>
         </div>
       </div>
@@ -236,29 +217,6 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.11.2/toastify.js"></script>
 
-    <script>
-      // Open the modal to edit the email
-      document.getElementById("editEmailBtn").onclick = function () {
-        $("#emailModal").modal("show")
-        fetch("/userDetails") // Fetch user details
-          .then((response) => response.json())
-          .then((data) => {
-            document.getElementById("email").value = data.email
-            document.getElementById("cpr").value = data.cpr // This will be disabled
-          })
-      }
-
-      // Save the new email
-      document.getElementById("emailForm").onsubmit = function (event) {
-        event.preventDefault() // Prevent form submission
-        const newEmail = document.getElementById("email").value
-        const verifyEmail = document.getElementById("verifyEmail").value
-
-        if (newEmail !== verifyEmail) {
-          alert("Emails do not match!")
-          return
-        }
-      }
-    </script>
+    <%- include('../partials/footer.ejs') %>
   </body>
 </html>
