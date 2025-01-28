@@ -163,6 +163,7 @@
               ></span>
               New Schemes
             </button>
+<% if(user.username === 'Admin'){ %>
             <button
               id="add-user"
               onclick="showSpinnerAddUser(); setTimeout(redirectAddUsers,2000) ;"
@@ -176,6 +177,7 @@
               ></span>
               Add User
             </button>
+<% } %>
           </div>
           <script>
             function showSpinner() {
